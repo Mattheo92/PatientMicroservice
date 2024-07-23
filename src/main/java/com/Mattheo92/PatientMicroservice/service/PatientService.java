@@ -5,6 +5,7 @@ import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,11 +22,11 @@ public class PatientService {
         patientClient.registerPatientForVisit(visitId, email);
     }
 
-    public List<VisitDto> getVisitsByDoctorId(Long doctorId, boolean available) {
-        return patientClient.getVisitsByDoctorId(doctorId, available);
+        public List<VisitDto> getAvailableVisitsByDoctorId(Long doctorId) {
+        return patientClient.getVisitsByDoctorId(doctorId);
     }
 
-    public List<VisitDto> getAvailableVisitsByDoctorSpecializationAndByDate(String specialization, boolean available) {
-        return patientClient.getAvailableVisitsByDoctorSpecializationAndByDate(specialization, available);
+    public List<VisitDto> getAvailableVisitsByDoctorSpecializationAndByDate(String specialization, LocalDate date) {
+        return patientClient.getAvailableVisitsByDoctorSpecializationAndByDate(specialization, date);
     }
 }
