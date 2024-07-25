@@ -1,6 +1,7 @@
 package com.Mattheo92.PatientMicroservice.client;
 
 import com.Mattheo92.PatientMicroservice.fallback.PatientClientFallback;
+import com.Mattheo92.PatientMicroservice.model.Visit;
 import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientProperties;
@@ -16,19 +17,19 @@ import java.util.List;
 @FeignClient(name = "medical-clinic", configuration = FeignClientProperties.FeignClientConfiguration.class, fallback = PatientClientFallback.class)
 public interface PatientClient {
 
-    @GetMapping("/patients/{email}/visits")
-    List<VisitDto> getVisitsByPatientEmail(@PathVariable("email") String email);
+    @GetMapping("/visits/patient/{patientId}")
+    List<VisitDto> getVisitsByPatientId(@PathVariable("patientId") Long patientId);
 
-    @PostMapping("/visits/{visitId}/register")
-    void registerPatientForVisit(@PathVariable("visitId") Long visitId, @RequestParam("email") String email);
+    @PostMapping("/visits/{visitId}/patients/{patientId}")
+    Visit registerPatientForVisit(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId);
 
-    @GetMapping("/doctors/{doctorId}/visits")
+    @GetMapping("visits/doctor/{doctorId}")
     List<VisitDto> getVisitsByDoctorId(
             @PathVariable("doctorId") Long doctorId);
 
-
-    @GetMapping("/doctors/specialization/{specialization}/available-dates")
-    List<VisitDto> getAvailableVisitsByDoctorSpecializationAndByDate(
+    @GetMapping("/visits/doctors/{specialization}/date/{date}")
+    List<VisitDto> getAvailableVisitsBySpecializationAndDate(
             @PathVariable("specialization") String specialization,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
+            @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);
+
 }

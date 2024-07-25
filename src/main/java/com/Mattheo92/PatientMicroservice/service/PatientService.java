@@ -1,6 +1,7 @@
 package com.Mattheo92.PatientMicroservice.service;
 
 import com.Mattheo92.PatientMicroservice.client.PatientClient;
+import com.Mattheo92.PatientMicroservice.model.Visit;
 import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,19 +15,19 @@ public class PatientService {
 
     private final PatientClient patientClient;
 
-    public List<VisitDto> getVisitsByPatientEmail(String email) {
-        return patientClient.getVisitsByPatientEmail(email);
+    public List<VisitDto> getVisitsByPatientId(Long patientId) {
+        return patientClient.getVisitsByPatientId(patientId);
     }
 
-    public void registerPatientForVisit(Long visitId, String email) {
-        patientClient.registerPatientForVisit(visitId, email);
+    public void registerPatientForVisit(Long visitId, Long patientId) {
+        patientClient.registerPatientForVisit(visitId, patientId);
     }
 
-        public List<VisitDto> getAvailableVisitsByDoctorId(Long doctorId) {
+    public List<VisitDto> getVisitsByDoctorId(Long doctorId) {
         return patientClient.getVisitsByDoctorId(doctorId);
     }
 
-    public List<VisitDto> getAvailableVisitsByDoctorSpecializationAndByDate(String specialization, LocalDate date) {
-        return patientClient.getAvailableVisitsByDoctorSpecializationAndByDate(specialization, date);
+    public List<VisitDto> getAvailableVisitsBySpecializationAndDate(String specialization, LocalDate date) {
+        return patientClient.getAvailableVisitsBySpecializationAndDate(specialization, date);
     }
 }
