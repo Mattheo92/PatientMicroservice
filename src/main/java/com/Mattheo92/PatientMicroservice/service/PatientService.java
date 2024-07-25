@@ -4,6 +4,7 @@ import com.Mattheo92.PatientMicroservice.client.PatientClient;
 import com.Mattheo92.PatientMicroservice.model.Visit;
 import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,9 +12,10 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class PatientService {
 
-    private final PatientClient patientClient;
+    private PatientClient patientClient;
 
     public List<VisitDto> getVisitsByPatientId(Long patientId) {
         return patientClient.getVisitsByPatientId(patientId);

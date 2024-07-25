@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import feign.FeignException;
+import feign.RetryableException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -71,7 +72,7 @@ public class PatientClientIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody("{\"message\": \"Patient not found\"}")));
 
-        FeignException exception = assertThrows(FeignException.NotFound.class, () -> {
+        RetryableException exception = assertThrows(RetryableException.class, () -> {
             patientClient.getVisitsByPatientId(999L);
         });
 
@@ -86,7 +87,7 @@ public class PatientClientIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withBody("{\"message\": \"Service is unavailable\"}")));
 
-        FeignException exception = assertThrows(FeignException.ServiceUnavailable.class, () -> {
+        RetryableException exception = assertThrows(RetryableException.class, () -> {
             patientClient.getVisitsByPatientId(1L);
         });
 

@@ -2,7 +2,6 @@ package com.Mattheo92.PatientMicroservice.fallback;
 
 import com.Mattheo92.PatientMicroservice.client.PatientClient;
 import com.Mattheo92.PatientMicroservice.handler.exception.VisitNotFoundException;
-import com.Mattheo92.PatientMicroservice.model.Visit;
 import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public class PatientClientFallback implements PatientClient {
     }
 
     @Override
-    public Visit registerPatientForVisit(Long visitId, Long patientId) {
+    public void registerPatientForVisit(Long visitId, Long patientId) {
         throw new RuntimeException("Sorry, but You can't register for this visit");
     }
 

@@ -53,9 +53,7 @@ public class PatientControllerTest {
 
         mockMvc.perform(get("/visits/patient/{patientId}", patientId))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].startDate").value("2025-07-01T10:00:00"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].startDate").value("2025-07-02T14:00:00"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

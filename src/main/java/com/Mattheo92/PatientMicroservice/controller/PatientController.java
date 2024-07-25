@@ -21,38 +21,38 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    @Operation(summary = "Get visits by patient id", description = "Zwraca listę wizyt dla konkretnego identyfikatora pacjenta")
+    @Operation(summary = "Get visits by patient id", description = "Returned list of visits for patient with given id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pomyślnie zwrócono wizyty"),
-            @ApiResponse(responseCode = "404", description = "Pacjent nie znaleziony")})
+            @ApiResponse(responseCode = "200", description = "Returned visits for patient"),
+            @ApiResponse(responseCode = "404", description = "Patient not found")})
     @GetMapping("/patient/{patientId}")
     public List<VisitDto> getVisitsByPatientId(@PathVariable("patientId") Long patientId) {
         return patientService.getVisitsByPatientId(patientId);
     }
 
-    @Operation(summary = "Register patient for a visit", description = "Rejestruje pacjenta na konkretną wizytę")
+    @Operation(summary = "Register patient for a visit", description = "Register patient for a available visit")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Pomyślnie zarejestrowano pacjenta na wizytę"),
-            @ApiResponse(responseCode = "400", description = "Nieprawidłowe dane wizyty lub pacjenta")})
+            @ApiResponse(responseCode = "204", description = "Successfully registered patient "),
+            @ApiResponse(responseCode = "400", description = "Patient not found or visit not found")})
     @PostMapping("/{visitId}/patients/{patientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void registerPatientForVisit(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId) {
         patientService.registerPatientForVisit(visitId, patientId);
     }
 
-    @Operation(summary = "Get visits for a doctor", description = "Zwraca listę wizyt dla konkretnego lekarza")
+    @Operation(summary = "Get available visits for a doctor", description = "Return available visits for a doctor with given id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pomyślnie zwrócono wizyty"),
-            @ApiResponse(responseCode = "404", description = "Lekarz nie znaleziony")})
+            @ApiResponse(responseCode = "200", description = "Returned available visits"),
+            @ApiResponse(responseCode = "404", description = "Docotr not found")})
     @GetMapping("/doctor/{doctorId}")
     public List<VisitDto> getVisitsByDoctorId(@PathVariable("doctorId") Long doctorId) {
         return patientService.getVisitsByDoctorId(doctorId);
     }
 
-    @Operation(summary = "Get available dates by specialization", description = "Zwraca listę dostępnych terminów wizyt dla konkretnej specjalizacji")
+    @Operation(summary = "Get available dates by specialization", description = "Return available visits for a doctor with given specialization")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pomyślnie zwrócono dostępne terminy"),
-            @ApiResponse(responseCode = "404", description = "Specjalizacja nie znaleziona")})
+            @ApiResponse(responseCode = "200", description = "Returned available visits"),
+            @ApiResponse(responseCode = "404", description = "Specialization not found")})
     @GetMapping("/doctors/{specialization}/date/{date}")
     public List<VisitDto> getAvailableVisitsBySpecializationAndDate(
             @PathVariable("specialization") String specialization,
