@@ -36,7 +36,7 @@ public class RetreiveMessageErrorDecoder implements ErrorDecoder {
                     response.request());
         } else if (response.status() == 404) {
             {
-                String message = "Sorry, but patient not found";
+                String message = "Sorry, but not found";
                 try (InputStream bodyIs = response.body().asInputStream()) {
                     ObjectMapper mapper = new ObjectMapper();
                     ExceptionMessage exceptionMessage = mapper.readValue(bodyIs, ExceptionMessage.class);
@@ -55,6 +55,5 @@ public class RetreiveMessageErrorDecoder implements ErrorDecoder {
             }
         }
             return errorDecoder.decode(methodKey, response);
-
     }
 }

@@ -19,3 +19,4 @@ public class FeignClientConfiguration {
         return new RetreiveMessageErrorDecoder();
     }
 }
+

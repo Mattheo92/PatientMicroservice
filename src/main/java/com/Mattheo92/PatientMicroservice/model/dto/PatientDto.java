@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Getter
+
     public class PatientDto {
         @JsonProperty("id")
         private Long id;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.LocalDate;
 import java.util.List;
 
-@FeignClient(name = "medical-clinic", configuration = FeignClientConfiguration.class, fallback = PatientClientFallback.class)
+@FeignClient(name = "medical-clinic", configuration = FeignClientProperties.FeignClientConfiguration.class, fallback = PatientClientFallback.class)
 public interface PatientClient {
 
     @GetMapping("/patient/{patientId}")
@@ -23,8 +23,7 @@ public interface PatientClient {
     void registerPatientForVisit(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId);
 
     @GetMapping("/doctor/{doctorId}")
-    List<VisitDto> getVisitsByDoctorId(
-            @PathVariable("doctorId") Long doctorId);
+    List<VisitDto> getVisitsByDoctorId(@PathVariable("doctorId") Long doctorId);
 
     @GetMapping("/doctors/{specialization}/date/{date}")
     List<VisitDto> getAvailableVisitsBySpecializationAndDate(

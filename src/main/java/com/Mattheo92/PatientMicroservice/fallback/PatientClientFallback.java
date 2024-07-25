@@ -6,6 +6,7 @@ import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -18,7 +19,7 @@ public class PatientClientFallback implements PatientClient {
 
     @Override
     public void registerPatientForVisit(Long visitId, Long patientId) {
-        throw new RuntimeException("Sorry, but You can't register for this visit");
+        throw new RuntimeException("Sorry, but you can't register for this visit");
     }
 
     @Override

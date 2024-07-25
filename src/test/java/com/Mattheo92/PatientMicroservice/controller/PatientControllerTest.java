@@ -147,11 +147,11 @@ public class PatientControllerTest {
         LocalDate date = LocalDate.of(2024, 7, 24);
 
         when(patientService.getAvailableVisitsBySpecializationAndDate(specialization, date))
-                .thenReturn(Collections.emptyList());
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/visits/doctors/{specialization}/date/{date}", specialization, date)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

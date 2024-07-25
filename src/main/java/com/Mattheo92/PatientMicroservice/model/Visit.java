@@ -15,6 +15,7 @@ public class Visit {
     private Long id;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "patient_id")

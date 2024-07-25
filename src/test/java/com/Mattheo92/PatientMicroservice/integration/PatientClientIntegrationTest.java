@@ -33,8 +33,8 @@ public class PatientClientIntegrationTest {
 
     @BeforeAll
     public static void setup() {
-        wireMockServer = new WireMockServer(8082);
-        WireMock.configureFor("localhost", 8082);
+        wireMockServer = new WireMockServer(8083);
+        WireMock.configureFor("localhost", 8083);
         wireMockServer.start();
     }
 
@@ -44,14 +44,14 @@ public class PatientClientIntegrationTest {
     }
 
     @Test
-    public void testGetVisitsForPatient_Status200() throws Exception {
+    public void GetVisitsForPatient_Status200() throws Exception {
         Long patientId = 1L;
 
         VisitDto visitDto1 = new VisitDto(LocalDateTime.of(2025, 7, 1, 10, 0), LocalDateTime.of(2025, 7, 1, 11, 0));
         VisitDto visitDto2 = new VisitDto(LocalDateTime.of(2025, 7, 2, 14, 0), LocalDateTime.of(2025, 7, 2, 15, 0));
         List<VisitDto> expectedVisitDtoList = List.of(visitDto1, visitDto2);
 
-        wireMockServer.stubFor(get(urlEqualTo("/visits/patient/1"))
+        wireMockServer.stubFor(get(urlEqualTo("/patient/1"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -65,8 +65,8 @@ public class PatientClientIntegrationTest {
     }
 
     @Test
-    public void testGetVisitsForPatient_Status404() throws Exception {
-        wireMockServer.stubFor(get(urlEqualTo("/visits/patient/999"))
+    public void GetVisitsForPatient_Status404() throws Exception {
+        wireMockServer.stubFor(get(urlEqualTo("/patient/999"))
                 .willReturn(aResponse()
                         .withStatus(404)
                         .withHeader("Content-Type", "application/json")
@@ -80,8 +80,8 @@ public class PatientClientIntegrationTest {
     }
 
     @Test
-    public void testGetVisitsForPatient_Status503() throws Exception {
-        wireMockServer.stubFor(get(urlEqualTo("/visits/patient/1"))
+    public void GetVisitsForPatient_Status503() throws Exception {
+        wireMockServer.stubFor(get(urlEqualTo("/patient/1"))
                 .willReturn(aResponse()
                         .withStatus(503)
                         .withHeader("Content-Type", "application/json")
