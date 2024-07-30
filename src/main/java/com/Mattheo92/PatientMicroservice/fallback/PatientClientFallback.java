@@ -13,17 +13,17 @@ import java.util.List;
 public class PatientClientFallback implements PatientClient {
 
     @Override
-    public List<VisitDto> getVisitsByPatientId(Long id) {
+    public List<VisitDto> getVisitsForPatient(Long id) {
         throw new VisitNotFoundException("No visits found for patient");
     }
 
     @Override
-    public void registerPatientForVisit(Long visitId, Long patientId) {
+    public void registerPatient(Long visitId, Long patientId) {
         throw new RuntimeException("Sorry, but you can't register for this visit");
     }
 
     @Override
-    public List<VisitDto> getVisitsByDoctorId(Long doctorId) {
+    public List<VisitDto> getVisitsForDoctor(Long doctorId) {
         throw new VisitNotFoundException("No available visits found for doctor");
     }
 

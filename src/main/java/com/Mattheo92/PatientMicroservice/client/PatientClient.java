@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.time.LocalDate;
 import java.util.List;
 
-@FeignClient(name = "medical-clinic", configuration = FeignClientProperties.FeignClientConfiguration.class, fallback = PatientClientFallback.class)
+@FeignClient(name = "medicalclinic", configuration = FeignClientProperties.FeignClientConfiguration.class, fallback = PatientClientFallback.class)
 public interface PatientClient {
 
-    @GetMapping("/patient/{patientId}")
-    List<VisitDto> getVisitsByPatientId(@PathVariable("patientId") Long patientId);
+    @GetMapping("visits/patient/{patientId}")
+    List<VisitDto> getVisitsForPatient(@PathVariable("patientId") Long patientId);
 
-    @PostMapping("/{visitId}/patients/{patientId}")
-    void registerPatientForVisit(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId);
+    @PostMapping("/visits//{visitId}/patients/{patientId}")
+    void registerPatient(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId);
 
-    @GetMapping("/doctor/{doctorId}")
-    List<VisitDto> getVisitsByDoctorId(@PathVariable("doctorId") Long doctorId);
+    @GetMapping("visits/doctor/{doctorId}")
+    List<VisitDto> getVisitsForDoctor(@PathVariable("doctorId") Long doctorId);
 
-    @GetMapping("/doctors/{specialization}/date/{date}")
+    @GetMapping("visits/doctors/{specialization}/date/{date}")
     List<VisitDto> getAvailableVisitsBySpecializationAndDate(
             @PathVariable("specialization") String specialization,
             @PathVariable("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date);

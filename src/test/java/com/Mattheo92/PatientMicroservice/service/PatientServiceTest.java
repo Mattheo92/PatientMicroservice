@@ -55,9 +55,9 @@ public class PatientServiceTest {
         VisitDto visitDto2 = new VisitDto(visit2.getStartDate(), visit2.getEndDate());
         List<VisitDto> expectedVisitDtoList = List.of(visitDto1, visitDto2);
 
-        when(patientClient.getVisitsByPatientId(patientId)).thenReturn(expectedVisitDtoList);
+        when(patientClient.getVisitsForPatient(patientId)).thenReturn(expectedVisitDtoList);
 
-        List<VisitDto> result = patientService.getVisitsByPatientId(patientId);
+        List<VisitDto> result = patientService.getVisitsForPatient(patientId);
 
         assertEquals(expectedVisitDtoList.size(), result.size());
         assertEquals(expectedVisitDtoList.get(0).getStartDate(), result.get(0).getStartDate());
@@ -67,10 +67,10 @@ public class PatientServiceTest {
     @Test
     void getVisitsByPatientId_PatientNotExists_ReturnedException() {
         Long id = 1L;
-        when(patientClient.getVisitsByPatientId(id)).thenThrow(FeignException.NotFound.class);
+        when(patientClient.getVisitsForPatient(id)).thenThrow(FeignException.NotFound.class);
 
         assertThrows(FeignException.NotFound.class, () -> {
-            patientService.getVisitsByPatientId(id);
+            patientService.getVisitsForPatient(id);
         });
     }
 
@@ -82,9 +82,9 @@ public class PatientServiceTest {
         VisitDto visitDto2 = new VisitDto(LocalDateTime.of(2025, 7, 2, 14, 0), LocalDateTime.of(2025, 7, 2, 15, 0));
         List<VisitDto> availableVisits = List.of(visitDto1, visitDto2);
 
-        when(patientClient.getVisitsByDoctorId(doctorId)).thenReturn(availableVisits);
+        when(patientClient.getVisitsForDoctor(doctorId)).thenReturn(availableVisits);
 
-        List<VisitDto> result = patientService.getVisitsByDoctorId(doctorId);
+        List<VisitDto> result = patientService.getVisitsForDoctor(doctorId);
 
         assertEquals(availableVisits.size(), result.size());
         assertEquals(availableVisits.get(0).getStartDate(), result.get(0).getStartDate());
@@ -95,9 +95,9 @@ public class PatientServiceTest {
     public void getAvailableVisitsByDoctorId_NegativeCase() {
         Long doctorId = 1L;
 
-        when(patientClient.getVisitsByDoctorId(doctorId)).thenReturn(List.of());
+        when(patientClient.getVisitsForDoctor(doctorId)).thenReturn(List.of());
 
-        List<VisitDto> result = patientService.getVisitsByDoctorId(doctorId);
+        List<VisitDto> result = patientService.getVisitsForDoctor(doctorId);
 
         assertTrue(result.isEmpty());
     }
@@ -137,9 +137,9 @@ public class PatientServiceTest {
         Long visitId = 1L;
         Long patientId = 1L;
 
-        patientService.registerPatientForVisit(visitId, patientId);
+        patientService.registerPatient(visitId, patientId);
 
-        verify(patientClient, times(1)).registerPatientForVisit(visitId, patientId);
+        verify(patientClient, times(1)).registerPatient(visitId, patientId);
     }
 
     @Test
@@ -147,12 +147,12 @@ public class PatientServiceTest {
         Long visitId = 2L;
         Long patientId = 1L;
 
-        doThrow(FeignException.NotFound.class).when(patientClient).registerPatientForVisit(visitId, patientId);
+        doThrow(FeignException.NotFound.class).when(patientClient).registerPatient(visitId, patientId);
 
         assertThrows(FeignException.NotFound.class, () -> {
-            patientService.registerPatientForVisit(visitId, patientId);
+            patientService.registerPatient(visitId, patientId);
         });
 
-        verify(patientClient, times(1)).registerPatientForVisit(visitId, patientId);
+        verify(patientClient, times(1)).registerPatient(visitId, patientId);
     }
 }

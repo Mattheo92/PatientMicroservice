@@ -4,7 +4,6 @@ import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import com.Mattheo92.PatientMicroservice.service.PatientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,20 +48,22 @@ public class PatientControllerTest {
         VisitDto visitDto2 = new VisitDto(LocalDateTime.of(2025, 7, 2, 14, 0), LocalDateTime.of(2025, 7, 2, 15, 0));
         List<VisitDto> visitDtoList = List.of(visitDto1, visitDto2);
 
-        when(patientService.getVisitsByPatientId(patientId)).thenReturn(visitDtoList);
+        when(patientService.getVisitsForPatient(patientId)).thenReturn(visitDtoList);
 
         mockMvc.perform(get("/visits/patient/{patientId}", patientId))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)));
     }
 
     @Test
     void getVisitsForPatient_PatientNotExists_ReturnedException() throws Exception {
         Long patientId = 1L;
 
-        when(patientService.getVisitsByPatientId(patientId)).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found"));
+        when(patientService.getVisitsForPatient(patientId))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/visits/patient/{patientId}", patientId)
+        mockMvc.perform(get("/visits/patient/{patientId}", patientId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -79,7 +80,7 @@ public class PatientControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        verify(patientService).registerPatientForVisit(visitId, patientId);
+        verify(patientService).registerPatient(visitId, patientId);
     }
 
     @Test
@@ -87,15 +88,16 @@ public class PatientControllerTest {
         Long visitId = 1L;
         Long patientId = 2L;
 
-        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found")).when(patientService).registerPatientForVisit(visitId, patientId);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Patient not found"))
+                .when(patientService).registerPatient(visitId, patientId);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/visits/{visitId}/patients/{patientId}", visitId, patientId)
+        mockMvc.perform(post("/visits/{visitId}/patients/{patientId}", visitId, patientId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Patient not found"));
 
-        verify(patientService).registerPatientForVisit(visitId, patientId);
+        verify(patientService).registerPatient(visitId, patientId);
     }
 
     @Test
@@ -104,7 +106,7 @@ public class PatientControllerTest {
         VisitDto visitDto = new VisitDto();
         List<VisitDto> visits = List.of(visitDto);
 
-        when(patientService.getVisitsByDoctorId(doctorId)).thenReturn(visits);
+        when(patientService.getVisitsForDoctor(doctorId)).thenReturn(visits);
 
         mockMvc.perform(get("/visits/doctor/{doctorId}", doctorId))
                 .andDo(MockMvcResultHandlers.print())
@@ -116,9 +118,9 @@ public class PatientControllerTest {
     void getVisitsByDoctorId_AllVisitsOccupied() throws Exception {
         Long doctorId = 1L;
 
-        when(patientService.getVisitsByDoctorId(doctorId)).thenReturn(Collections.emptyList());
+        when(patientService.getVisitsForDoctor(doctorId)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/visits/doctor/{doctorId}", doctorId))
+        mockMvc.perform(get("/visits/doctor/{doctorId}", doctorId))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
@@ -149,7 +151,7 @@ public class PatientControllerTest {
         when(patientService.getAvailableVisitsBySpecializationAndDate(specialization, date))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/visits/doctors/{specialization}/date/{date}", specialization, date)
+        mockMvc.perform(get("/visits/doctors/{specialization}/date/{date}", specialization, date)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

@@ -1,6 +1,5 @@
 package com.Mattheo92.PatientMicroservice.controller;
 
-import com.Mattheo92.PatientMicroservice.model.Visit;
 import com.Mattheo92.PatientMicroservice.model.dto.VisitDto;
 import com.Mattheo92.PatientMicroservice.service.PatientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,37 +20,38 @@ public class PatientController {
 
     private final PatientService patientService;
 
-    @Operation(summary = "Get visits by patient id", description = "Returned list of visits for patient with given id")
+    @Operation(summary = "Get visits by patient id", description = "Returns a list of visits for a patient with the given id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returned visits for patient"),
+            @ApiResponse(responseCode = "200", description = "Visits returned successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found")})
     @GetMapping("/patient/{patientId}")
-    public List<VisitDto> getVisitsByPatientId(@PathVariable("patientId") Long patientId) {
-        return patientService.getVisitsByPatientId(patientId);
+    public List<VisitDto> getVisitsForPatient(@PathVariable("patientId") Long patientId) {
+        return patientService.getVisitsForPatient(patientId);
     }
 
-    @Operation(summary = "Register patient for a visit", description = "Register patient for a available visit")
+    @Operation(summary = "Register patient for a visit", description = "Registers a patient for a visit")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successfully registered patient "),
-            @ApiResponse(responseCode = "400", description = "Patient not found or visit not found")})
+            @ApiResponse(responseCode = "204", description = "Patient successfully registered for the visit"),
+            @ApiResponse(responseCode = "400", description = "Invalid patient or visit ID"),
+            @ApiResponse(responseCode = "404", description = "Patient or visit not found")})
     @PostMapping("/{visitId}/patients/{patientId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void registerPatientForVisit(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId) {
-        patientService.registerPatientForVisit(visitId, patientId);
+    public void registerPatient(@PathVariable("visitId") Long visitId, @PathVariable("patientId") Long patientId) {
+        patientService.registerPatient(visitId, patientId);
     }
 
-    @Operation(summary = "Get available visits for a doctor", description = "Return available visits for a doctor with given id")
+    @Operation(summary = "Get visits by doctor id", description = "Returns a list of visits for a doctor with the given id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returned available visits"),
-            @ApiResponse(responseCode = "404", description = "Docotr not found")})
+            @ApiResponse(responseCode = "200", description = "Visits returned successfully"),
+            @ApiResponse(responseCode = "404", description = "Doctor not found")})
     @GetMapping("/doctor/{doctorId}")
-    public List<VisitDto> getVisitsByDoctorId(@PathVariable("doctorId") Long doctorId) {
-        return patientService.getVisitsByDoctorId(doctorId);
+    public List<VisitDto> getVisitsForDoctor(@PathVariable("doctorId") Long doctorId) {
+        return patientService.getVisitsForDoctor(doctorId);
     }
 
-    @Operation(summary = "Get available dates by specialization", description = "Return available visits for a doctor with given specialization")
+    @Operation(summary = "Get available visits by specialization and date", description = "Returns a list of available visits for a given specialization and date")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Returned available visits"),
+            @ApiResponse(responseCode = "200", description = "Available visits returned successfully"),
             @ApiResponse(responseCode = "404", description = "Specialization not found")})
     @GetMapping("/doctors/{specialization}/date/{date}")
     public List<VisitDto> getAvailableVisitsBySpecializationAndDate(
